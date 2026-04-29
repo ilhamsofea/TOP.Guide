@@ -8,7 +8,7 @@ const RESOURCES = [
   {
     icon: "book",
     title: "Book: Fatwa-fatwa Perubatan di Malaysia",
-    desc: "Islamic legal opinions concerning medicine and its aplication in Malaysia; collected fatwas issued by the Fatwa Committee of the National Council for Islamic Religious Affairs Malaysia and State Mufti Departments of Malaysia.\nSource: Muhamad Rafiqi Hehsan. (2023). Fatwa-fatwa Perubatan di Malaysia (p. 436) [Review of Fatwa-fatwa Perubatan di Malaysia ]. PENERBIT USIM.",
+    desc: "Islamic legal opinions concerning medicine and its application in Malaysia; collected fatwas issued by the Fatwa Committee of the National Council for Islamic Religious Affairs Malaysia and State Mufti Departments of Malaysia.\nSource: Muhamad Rafiqi Hehsan. (2023). Fatwa-fatwa Perubatan di Malaysia (p. 436) [Review of Fatwa-fatwa Perubatan di Malaysia ]. PENERBIT USIM.",
     href: "#",
   },
   // {
