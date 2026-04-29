@@ -4,7 +4,7 @@ const NAV_ITEMS = [
   {
     group: 'Clinical Tools',
     items: [
-      { id: 'assessment', label: 'TOP Assessment', icon: ClipboardIcon, badge: null },
+      { id: 'assessment', label: 'Assesement', icon: ClipboardIcon, badge: null },
     ],
   },
   {
@@ -42,7 +42,7 @@ export default function Sidebar() {
           </svg>
         </div>
         <div>
-          <div className="sidebar-logo-text">TOP.Guide</div>
+          <div className="sidebar-logo-text">HAYATPATH</div>
           <div className="sidebar-logo-sub">Clinical Decision Aid</div>
         </div>
       </div>

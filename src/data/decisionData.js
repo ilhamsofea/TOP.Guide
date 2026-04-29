@@ -83,18 +83,18 @@ export const DECISION_STEPS = {
 
   after120: {
     label: 'Step 2 of 5',
-    question: 'Is there a life-threatening maternal emergency (ḍarūrah)?',
-    sub: 'After ensoulment at ≥120 days, TOP is generally prohibited unless all three ḍarūrah provisions are satisfied.',
+    question: 'Does continuing the pregnancy pose a greater risk to the mother?',
+    sub: 'After ensoulment (≥120 days), TOP is generally prohibited. The first question is whether the pregnancy itself poses a serious maternal risk.',
     options: [
-      { text: 'Yes — life-threatening emergency confirmed', next: 'darurah_check' },
-      { text: 'No — no life-threatening emergency', next: 'after120_no' },
+      { text: 'Yes — continuing pregnancy poses greater risk to mother', next: 'darurah_check' },
+      { text: 'No — no greater risk to mother identified', next: 'after120_no' },
     ],
   },
 
   after120_no: {
     result: 'prohibited',
     title: 'TOP is prohibited',
-    body: 'After ensoulment (≥120 days), termination is not permitted without a confirmed life-threatening emergency that satisfies all three ḍarūrah provisions.',
+    body: 'After ensoulment (≥120 days), continuing the pregnancy does not pose a greater risk to the mother. Termination is not permitted. Provide full ANC and psychosocial support.',
     steps: [
       'Document the clinical decision clearly.',
       'Provide full ANC referral.',
@@ -105,11 +105,11 @@ export const DECISION_STEPS = {
 
   darurah_check: {
     label: 'Step 3 of 5',
-    question: 'Are all three ḍarūrah provisions satisfied?',
-    sub: 'All three conditions must be confirmed simultaneously for the ḍarūrah ruling to apply.',
+    question: 'Are all five ḍarūrah provisions satisfied?',
+    sub: 'All five conditions must be confirmed simultaneously for the ḍarūrah ruling to apply after ensoulment.',
     provisions: true,
     options: [
-      { text: 'Yes — all three provisions are met', next: 'after120_allowed' },
+      { text: 'Yes — all five provisions are met', next: 'after120_allowed' },
       { text: 'No — one or more provisions are not met', next: 'after120_no' },
     ],
   },
@@ -117,7 +117,7 @@ export const DECISION_STEPS = {
   after120_allowed: {
     result: 'allowed',
     title: 'TOP may be permissible',
-    body: 'All three ḍarūrah provisions are satisfied. Termination after 120 days may be permitted. Verify MOH criteria and proceed with pre-abortion counselling.',
+    body: 'All five ḍarūrah provisions are satisfied. Termination after 120 days may be permitted. Verify MOH criteria and proceed with pre-abortion counselling.',
     steps: [
       'Verify MOH clinical criteria are satisfied.',
       'Conduct mandatory 48-hour pre-abortion counselling.',
@@ -129,6 +129,27 @@ export const DECISION_STEPS = {
 
   maternal_indication: {
     label: 'Step 4 of 5',
+    question: 'Does continuing the pregnancy pose a greater risk to the mother?',
+    sub: 'For maternal indications, there must be clear evidence that the pregnancy itself poses a serious risk — and that termination is an effective intervention to reduce that harm.',
+    options: [
+      { text: 'Yes — continuing pregnancy poses greater risk to mother', next: 'maternal_moh' },
+      { text: 'No — no greater maternal risk identified', next: 'maternal_no_risk' },
+    ],
+  },
+
+  maternal_no_risk: {
+    result: 'prohibited',
+    title: 'TOP is prohibited',
+    body: 'Continuing the pregnancy does not pose a greater risk to the mother. A maternal indication requires clear evidence of serious risk. TOP is not permissible on these grounds.',
+    steps: [
+      'Document the clinical assessment clearly in patient records.',
+      'Refer patient for ANC and specialist review.',
+      'Provide psychosocial support and counselling.',
+    ],
+  },
+
+  maternal_moh: {
+    label: 'Step 5 of 5',
     question: 'Does the case meet MOH clinical criteria?',
     sub: 'Maternal indications must fulfil Ministry of Health clinical criteria for TOP to be warranted.',
     options: [
@@ -191,15 +212,12 @@ export const DECISION_STEPS = {
   },
 
   congenital_direct: {
-    result: 'allowed',
-    title: 'TOP is permissible',
-    body: 'A serious condition directly causing miscarriage fulfils the shariah justification. Proceed with MOH criteria verification, counselling, and informed consent.',
-    steps: [
-      'Verify MOH clinical criteria.',
-      'Conduct 48-hour pre-abortion counselling.',
-      'Obtain written informed consent.',
-      'Proceed with management of TOP.',
-      'Arrange post-abortion counselling and family planning.',
+    label: 'Step 5 of 5',
+    question: 'Does the case meet MOH clinical criteria?',
+    sub: 'Even where the condition directly causes miscarriage, MOH criteria must still be verified before proceeding.',
+    options: [
+      { text: 'Yes — MOH criteria are met', next: 'moh_yes' },
+      { text: 'No — MOH criteria are not met', next: 'moh_no' },
     ],
   },
 
@@ -242,6 +260,14 @@ export const DARURAH_PROVISIONS = [
   {
     title: 'Defined necessity',
     detail: 'The necessity must not contradict Islamic legal commands and prohibitions.',
+  },
+  {
+    title: 'Evidence-based medical certainty',
+    detail: 'There must be clear, evidence-based medical certainty that continuing the pregnancy poses a serious risk, and that termination is an effective intervention to prevent or reduce that harm.',
+  },
+  {
+    title: 'Determined by a qualified professional',
+    detail: 'The state of ḍarūrah must be determined by a qualified, competent medical professional — not decided by the patient alone.',
   },
 ]
 

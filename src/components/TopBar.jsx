@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
 
 const PAGE_LABELS = {
-  assessment: 'TOP Assessment',
+  assessment: 'Assessment',
   about: 'About & Team',
   resources: 'References',
   bulletin: 'Case Bulletin',
@@ -25,7 +25,7 @@ export default function TopBar() {
   return (
     <header className="topbar">
       <div className="topbar-left">
-        <span className="breadcrumb-root">TOP.Guide</span>
+        <span className="breadcrumb-root">HAYATPATH</span>
         <span className="breadcrumb-sep">›</span>
         <span className="breadcrumb-page">{PAGE_LABELS[activePage] || activePage}</span>
       </div>
