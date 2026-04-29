@@ -57,7 +57,7 @@ export default function ResourcesPage() {
               <ResourceIcon type={r.icon} />
             </div>
             <h4>{r.title}</h4>
-            <p>{r.desc}</p>
+            <p style={{ whiteSpace: "pre-line" }}>{r.desc}</p>
           </a>
         ))}
       </div>
