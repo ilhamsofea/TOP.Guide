@@ -1,9 +1,34 @@
+import React, { useRef } from "react";
+import emailjs from "@emailjs/browser";
+
 export default function ContactPage() {
-  function handleSubmit() {
-    alert(
-      "Your message has been submitted. We will respond within one working day.",
-    );
-  }
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_lj3no28",
+        "template_6nujw3h",
+        form.current,
+        "Sy7PCxHFaXprPtzbv",
+      )
+      .then(
+        (result) => {
+          alert(
+            "Your message has been submitted. We will respond within one working day.",
+          );
+          form.current.reset();
+        },
+        (error) => {
+          console.log(error.text);
+          alert(
+            "Failed to send message. Please try again later or contact us via email.",
+          );
+        },
+      );
+  };
 
   return (
     <div className="page-content animate-in">
@@ -58,19 +83,22 @@ export default function ContactPage() {
         </div>
 
         {/* Form */}
-        <div className="contact-form-panel">
+        <form className="contact-form-panel" ref={form} onSubmit={sendEmail}>
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Full Name</label>
               <input
+                name="user_name"
                 className="form-input"
                 type="text"
                 placeholder="Dr. Ahmad"
+                required
               />
             </div>
             <div className="form-group">
               <label className="form-label">Hospital / Institution</label>
               <input
+                name="hospital"
                 className="form-input"
                 type="text"
                 placeholder="Hospital Kuala Lumpur"
@@ -82,14 +110,17 @@ export default function ContactPage() {
             <div className="form-group">
               <label className="form-label">Email Address</label>
               <input
+                name="user_email"
                 className="form-input"
                 type="email"
                 placeholder="doctor@hospital.my"
+                required
               />
             </div>
             <div className="form-group">
               <label className="form-label">Department</label>
               <input
+                name="department"
                 className="form-input"
                 type="text"
                 placeholder="Obs & Gynae"
@@ -99,7 +130,7 @@ export default function ContactPage() {
 
           <div className="form-group">
             <label className="form-label">Subject</label>
-            <select className="form-select">
+            <select className="form-select" name="subject">
               <option>Clinical query</option>
               <option>Tool feedback</option>
               <option>Case consultation</option>
@@ -112,18 +143,21 @@ export default function ContactPage() {
           <div className="form-group">
             <label className="form-label">Message</label>
             <textarea
+              name="message"
               className="form-textarea"
               placeholder="Describe your query or feedback in detail…"
+              required
             />
           </div>
 
-          <button className="btn-primary" onClick={handleSubmit}>
+          <button className="btn-primary" type="submit">
             Send Message
             <svg viewBox="0 0 24 24">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>
-        </div>
+        </form>
+        {/*end form */}
       </div>
     </div>
   );

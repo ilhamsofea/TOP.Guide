@@ -37,7 +37,7 @@ const TEAM = [
     role: "User Needs and Evaluation Analyst",
     email: "aufa.wjh@gmail.com",
   },
-    {
+  {
     initials: "SI",
     name: " Sharifah Ilham Sofea binti Nazarudin ",
     role: " System Developer",
@@ -77,22 +77,18 @@ export default function AboutPage() {
             "Necessity renders forbidden things permissible" (al-ḍarūrāt tubīḥ al-maḥẓūrāt).</em>
           </p> */}
           <p style={{ marginTop: 14 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            HAYATPATH was developed as a digital platform that supports
+            termination of pregnancy (TOP) decision-making for Muslim patients.
           </p>
           <p style={{ marginTop: 14 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            By integrating evidence-based medical practice with Islamic ethical
+            principles, ensuring that both clinical and religious considerations
+            are addressed.
           </p>
           <p style={{ marginTop: 14 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            This enables clinicians to make wise, ethically sound, and
+            well-informed decisions with confidence in a timely and efficient
+            manner.
           </p>
         </div>
 

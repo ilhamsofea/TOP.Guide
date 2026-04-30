@@ -1,32 +1,31 @@
-import { useState } from 'react'
-import { DECISION_STEPS } from '../data/decisionData'
+// hooks/useDecision.js
+import { useState } from "react";
+import { DECISION_TREE } from "../data/decisionData";
 
 export function useDecision() {
-  const [history, setHistory] = useState([])
-  const [currentKey, setCurrentKey] = useState('start')
+  const [history, setHistory] = useState([]); // [{ nodeId, chosen }]
+  const [currentId, setCurrentId] = useState("start");
 
-  const current = DECISION_STEPS[currentKey]
+  const current = DECISION_TREE[currentId];
+  const isResult = !!current?.result;
 
   function choose(optionIndex) {
-    const option = current.options[optionIndex]
-    setHistory(prev => [...prev, { key: currentKey, chosen: option.text }])
-    setCurrentKey(option.next)
+    const option = current.options[optionIndex];
+    setHistory((prev) => [...prev, { nodeId: currentId, chosen: option.text }]);
+    setCurrentId(option.next);
   }
 
   function back() {
-    if (history.length === 0) return
-    const prev = history[history.length - 1]
-    setHistory(h => h.slice(0, -1))
-    setCurrentKey(prev.key)
+    if (history.length === 0) return;
+    const prev = history[history.length - 1];
+    setHistory((h) => h.slice(0, -1));
+    setCurrentId(prev.nodeId);
   }
 
   function reset() {
-    setHistory([])
-    setCurrentKey('start')
+    setHistory([]);
+    setCurrentId("start");
   }
 
-  const stepNumber = history.length + 1
-  const isResult = Boolean(current?.result)
-
-  return { current, currentKey, history, choose, back, reset, stepNumber, isResult }
+  return { current, history, choose, back, reset, isResult };
 }
