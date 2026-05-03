@@ -217,7 +217,7 @@ export default function AssessmentPage() {
                   },
                   {
                     stage: "≥ 120 days",
-                    note: "After ensoulment. Requires serious maternal risk + all 5 ḍarūrah provisions. Partial = uncertain.",
+                    note: "After ensoulment. Requires serious maternal risk + all 5 ḍarūrah provisions/partial.",
                   },
                 ].map((s) => (
                   <div className="ref-item" key={s.stage}>
