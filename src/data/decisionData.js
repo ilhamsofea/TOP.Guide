@@ -1,3 +1,36 @@
+// decisionData.js
+// Logic follows: "Decision of Termination of Pregnancy for Muslim Patients" flowchart
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+export const DARURAH_PROVISIONS = [
+  {
+    title: "Certainty of emergency",
+    detail:
+      "The ḍarūrah must be real and established — not speculative or presumed.",
+  },
+  {
+    title: "Direct causal link",
+    detail:
+      "The harm must result directly from the current pregnancy, with no other means to avert it except TOP.",
+  },
+  {
+    title: "Defined necessity",
+    detail:
+      "The necessity must not contradict Islamic legal commands and prohibitions.",
+  },
+  {
+    title: "Evidence-based medical certainty",
+    detail:
+      "There must be clear, evidence-based medical certainty that continuing the pregnancy poses a serious risk, and that termination is an effective intervention to prevent or reduce that harm.",
+  },
+  {
+    title: "Determined by a qualified professional",
+    detail:
+      "The state of ḍarūrah must be determined by a qualified, competent medical professional — not decided by the patient alone.",
+  },
+];
+
 export const SCHOOLS_OF_FIQH = [
   {
     name: "Mazhab Hanafiyyah",
@@ -21,337 +54,455 @@ export const SCHOOLS_OF_FIQH = [
   },
 ];
 
-// decisionData.js
-// Logic follows: "Decision of Termination of Pregnancy for Muslim Patients" flowchart
-
-export const DARURAH_PROVISIONS = [
-  {
-    title: "Certainty of emergency",
-    detail: "The darurah must be certain — not speculative or feared.",
-  },
-  {
-    title: "Harm from current pregnancy",
-    detail:
-      "The harm results directly from this pregnancy and there is no other way to remove the harm except TOP.",
-  },
-  {
-    title: "Defined necessity",
-    detail:
-      "The necessity must be defined in such a way that it does not contradict Islamic legal commands and prohibitions.",
-  },
-  {
-    title: "Evidence-based medical certainty",
-    detail:
-      "There is clear, evidence-based medical certainty that continuing the pregnancy poses a serious risk, and that termination is an effective intervention to prevent or reduce that harm.",
-  },
-  {
-    title: "Qualified professional determination",
-    detail:
-      "The state of darurah must be determined by a qualified, competent medical professional — not decided by the patient alone.",
-  },
-];
-
-// ─── Decision Tree ────────────────────────────────────────────────────────────
-// Each node is either a question node or a result node.
-// Question node: { id, label, question, sub, options: [{ text, next }], provisions? }
-// Result node:   { id, result: 'allowed'|'prohibited'|'conditional', title, body, steps? }
-
-export const DECISION_TREE = {
-  // ── Step 1: Gestational age ──────────────────────────────────────────────
+export const TREE = {
+  // ── Step 1: Gestational age ───────────────────────────────────────────────
   start: {
     id: "start",
+    step: 0,
     label: "Step 1 · Gestational Age",
-    question: "What is the gestational age of the pregnancy?",
-    sub: "The gestational threshold determines the primary jurisprudential framework. Ensoulment (nafkh al-rūḥ) occurs at 120 days (≥17 weeks) according to the majority scholarly position.",
+    question: "What is the gestational age?",
+    sub: "Gestational age determines the baseline ruling on ensoulment (rūḥ) and the applicable scholarly positions.",
     options: [
-      { text: "Before 40 days", next: "before_ensoulment_indicator" },
-      {
-        text: "40 – 119 days (before ensoulment)",
-        next: "before_ensoulment_indicator",
-      },
-      { text: "≥ 120 days (at or after ensoulment)", next: "after_ensoulment" },
+      { text: "Before 40 days", next: "before40" },
+      { text: "40 – 119 days", next: "40to119" },
+      { text: "≥ 120 days (after ensoulment)", next: "after120" },
     ],
   },
 
-  // ── After ensoulment → always prohibited ────────────────────────────────
-  after_ensoulment: {
-    id: "after_ensoulment",
-    result: "prohibited",
-    title: "TOP is Prohibited",
-    body: "After ensoulment (≥120 days), termination of pregnancy is categorically prohibited (ḥarām) under all four schools of Islamic jurisprudence. There are no permissible exceptions at this gestational age.",
-    steps: [
-      "Provide compassionate counselling to the patient and family.",
-      "Continue antenatal care (ANC) throughout the pregnancy.",
-      "Arrange appropriate specialist referrals for maternal and fetal monitoring.",
-      "Offer psychosocial support to patient, significant others, and healthcare workers.",
-    ],
-  },
-
-  // ── Step 2: Shariah justification ───────────────────────────────────────
-  before_ensoulment_indicator: {
-    id: "before_ensoulment_indicator",
+  // ══════════════════════════════════════════════════════════════════════════
+  // BEFORE 40 DAYS
+  // ══════════════════════════════════════════════════════════════════════════
+  before40: {
+    id: "before40",
+    step: 1,
     label: "Step 2 · Shariah Justification",
-    question: "Is there a recognised Shariah justification (ʿuzur syarʿi)?",
-    sub: "The default ruling before ensoulment is that TOP is prohibited unless a legitimate Shariah justification exists. Without such justification, the default prohibition applies regardless of gestational age.",
-    options: [
-      {
-        text: "Yes — there is a recognised Shariah justification",
-        next: "reason_type",
-      },
-      {
-        text: "No — no Shariah justification present",
-        next: "no_justification",
-      },
-    ],
-  },
-
-  no_justification: {
-    id: "no_justification",
-    result: "prohibited",
-    title: "TOP is Prohibited",
-    body: "Without a recognised Shariah justification (ʿuzur syarʿi), the default ruling applies: termination of pregnancy is prohibited, even before ensoulment. Social convenience, financial concern, or preference alone do not constitute valid justifications.",
-    steps: [
-      "Counsel patient that no valid Islamic justification has been identified.",
-      "Continue antenatal care (ANC) and support throughout the pregnancy.",
-      "Provide psychosocial support and refer to social services if needed.",
-    ],
-  },
-
-  // ── Step 3: Reason type ──────────────────────────────────────────────────
-  reason_type: {
-    id: "reason_type",
-    label: "Step 3 · Reason for Termination",
-    question:
-      "What is the primary reason for termination from an Islamic view?",
-    sub: "Select the category that best describes the clinical and contextual situation. Each pathway carries different jurisprudential weight and MOH criteria.",
-    options: [
-      {
-        text: "Maternal indications — risk to the mother's health or life",
-        next: "maternal_risk",
-      },
-      {
-        text: "Fetal indications — congenital or chromosomal disorder",
-        next: "fetal_severity",
-      },
-      {
-        text: "Social reasons — circumstances of conception",
-        next: "social_reason",
-      },
-    ],
-  },
-
-  // ── MATERNAL pathway ─────────────────────────────────────────────────────
-  maternal_risk: {
-    id: "maternal_risk",
-    label: "Step 4 · Maternal Risk Assessment",
-    question:
-      "Does continuing the pregnancy pose a greater risk to the mother?",
-    sub: "There must be clear, evidence-based medical certainty that continuing the pregnancy poses a serious risk, and that termination is an effective intervention to prevent or reduce that harm.",
+    question: "Is a shariah justification (ʿuzur sharʿi) present?",
+    sub: "A recognised religious or medical ground must exist for the ruling to be reconsidered before 40 days.",
     provisions: true,
     options: [
+      { text: "Yes — justification is present", next: "before40_yes" },
+      { text: "No — no justification", next: "before40_no" },
+    ],
+  },
+
+  before40_yes: {
+    id: "before40_yes",
+    step: 2,
+    label: "Step 3 · Primary Indication",
+    question: "What is the primary indication?",
+    sub: "Select the category that best describes the clinical or contextual reason for termination.",
+    options: [
+      { text: "Maternal medical indication", next: "maternal_indication" },
+      { text: "Fetal congenital disorder", next: "fetal_congenital" },
+      { text: "Pregnancy resulting from rape", next: "rape" },
+      { text: "Social reason (poverty, adultery, etc.)", next: "social" },
+    ],
+  },
+
+  before40_no: {
+    id: "before40_no",
+    step: 3,
+    label: "Step 4 · Scholarly Position",
+    question:
+      "Select the applicable scholarly position or institutional guideline",
+    sub: "Without a shariah justification, Islamic jurists differ on the ruling before 40 days. Some permit with justification, while others prohibit regardless.",
+    options: [
       {
-        text: "Yes — continuing pregnancy poses serious risk to the mother",
-        next: "maternal_moh_check",
+        text: "Follow permissive view (Shafi’i 2nd view /  Imam al-Lakhmi)",
+        next: "permissive_view_moh",
       },
       {
-        text: "No — risk to mother is not established or is manageable",
-        next: "maternal_not_indicated",
+        text: "Follow strict view (Shafi’i 1st view /  Malikiyyah)",
+        next: "before40_prohibited",
       },
     ],
   },
 
-  maternal_not_indicated: {
-    id: "maternal_not_indicated",
+  // Without uzur before 40 days → Illegal (by Malikiyyah & Shafiʿiyyah 1st view)
+  before40_prohibited: {
+    id: "before40_prohibited",
     result: "prohibited",
     title: "TOP is Prohibited",
-    body: "If continuing the pregnancy does not pose a serious risk to the mother, the maternal ḍarūrah condition is not met. TOP is therefore prohibited under the maternal indications pathway.",
+    body: "Before 40 days, termination without a shariah justification is considered prohibited according to the strict view of Mazhab Shafiʿiyyah (1st view) and Malikiyyah. It is not legally permissible.",
     steps: [
-      "Continue antenatal care with close monitoring.",
-      "Review and optimise management of any existing maternal condition.",
-      "Provide ongoing support and counselling.",
+      "Note: ruling based on the strict view of Mazhab Shafiʿiyyah (1st view) and Malikiyyah.",
+      "Counsel the patient on the Islamic position and discourage termination.",
+      "Provide psychosocial support and welfare referral.",
+      "If patient insists, refer for ANC and further counselling.",
     ],
   },
 
-  maternal_moh_check: {
-    id: "maternal_moh_check",
+  permissive_view_moh: {
+    id: "permissive_view_moh",
+    step: 4,
     label: "Step 5 · MOH Criteria",
-    question: "Does the case fulfil MOH criteria for termination?",
-    sub: "All five ḍarūrah provisions must be satisfied and independently verified by a qualified medical professional. The decision cannot be made by the patient alone.",
-    provisions: true,
+    question: "Does the case meet MOH clinical criteria?",
+    sub: "Even if a permissive scholarly view is adopted, MOH clinical criteria must still be satisfied before proceeding with TOP.",
     options: [
-      {
-        text: "Yes — all MOH criteria and ḍarūrah provisions are fulfilled",
-        next: "pre_abortion_counselling",
-      },
-      { text: "No — MOH criteria are not fulfilled", next: "moh_not_met" },
+      { text: "Yes — MOH criteria are met", next: "permissive_view_moh_yes" },
+      { text: "No — MOH criteria are not met", next: "permissive_view_moh_no" },
     ],
   },
 
-  // ── FETAL pathway ────────────────────────────────────────────────────────
-  fetal_severity: {
-    id: "fetal_severity",
-    label: "Step 4 · Fetal Condition Severity",
-    question: "What is the severity of the fetal congenital condition?",
-    sub: "The Islamic ruling on fetal indications is calibrated to the severity and prognosis of the condition. Mild or treatable conditions do not constitute ḍarūrah.",
-    options: [
-      {
-        text: "Mild and treatable, or the child can live with the condition",
-        next: "fetal_mild",
-      },
-      { text: "Severe and serious condition", next: "fetal_severe" },
-    ],
-  },
-
-  fetal_mild: {
-    id: "fetal_mild",
-    result: "prohibited",
-    title: "TOP is Prohibited",
-    body: "A mild, treatable, or liveable congenital condition does not constitute a ḍarūrah under Islamic law. Termination on these grounds is not permitted. The condition should be managed through appropriate medical care and supportive services.",
-    steps: [
-      "Arrange referral to a relevant paediatric or fetal medicine specialist.",
-      "Provide genetic counselling and detailed explanation of the condition.",
-      "Offer psychosocial support to the patient and family.",
-      "Continue antenatal care with specialist oversight.",
-    ],
-  },
-
-  fetal_severe: {
-    id: "fetal_severe",
-    label: "Step 4b · Fetal Prognosis",
-    question:
-      "Is the condition serious enough that it would cause direct miscarriage or is incompatible with life?",
-    sub: "This distinction determines which jurisprudential opinion applies. A condition incompatible with life or one that directly causes miscarriage carries a different ruling to a severe but survivable condition.",
-    options: [
-      {
-        text: "Yes — serious and would directly cause miscarriage / incompatible with life",
-        next: "fetal_legal",
-      },
-      {
-        text: "No — severe but not directly causing miscarriage",
-        next: "fetal_moh_check",
-      },
-    ],
-  },
-
-  fetal_legal: {
-    id: "fetal_legal",
+  permissive_view_moh_yes: {
+    id: "permissive_view_moh_yes",
     result: "allowed",
     title: "TOP is Permissible",
-    body: "Where the fetal condition is serious and would directly cause miscarriage, or is definitively incompatible with life, TOP is considered legally permissible. This ruling is supported by Mazhab Shafiʿiyyah (3rd view) and Mazhab Hanabilah. MOH counselling protocols must still be followed.",
+    body: "Shariah justification is present and MOH clinical criteria are satisfied. Proceed with pre-abortion counselling, the mandatory 48-hour opt-out window, and written informed consent.",
+    body: "Before 40 days, termination without a shariah justification is considered legally permissible according to Imam al-Lakhmi and Mazhab Shafiʿiyyah (2nd view). MOH clinical criteria are also satisfied. Proceed with the full MOH counselling protocol.",
     steps: [
-      "Document the clinical findings confirming the diagnosis and prognosis.",
+      "Note: ruling based on Imam al-Lakhmi and Mazhab Shafiʿiyyah (2nd view).",
       "Conduct mandatory pre-abortion counselling session.",
-      "Observe 48-hour opt-out period — patient may withdraw consent.",
-      "Proceed with management of TOP if patient confirms decision.",
+      "Observe the 48-hour opt-out period.",
+      "Obtain written informed consent.",
+      "Proceed with management of TOP.",
+      "Arrange post-abortion counselling and family planning consultation.",
+    ],
+  },
+
+  permissive_view_moh_no: {
+    id: "permissive_view_moh_no",
+    result: "prohibited",
+    title: "TOP is Not Clinically Indicated",
+    body: "Although a shariah justification may be present, the case does not meet MOH clinical criteria. TOP is not recommended at this time. Refer patient for ANC.",
+    steps: [
+      "Document the clinical decision clearly in patient records.",
+      "Refer patient for antenatal care (ANC).",
+      "Provide psychosocial support and counselling.",
+      "Arrange post-consultation support for patient and significant others.",
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // 40 – 119 DAYS
+  // ══════════════════════════════════════════════════════════════════════════
+  "40to119": {
+    id: "40to119",
+    step: 1,
+    label: "Step 2 · Shariah Justification",
+    question: "Is a shariah justification (ʿuzur sharʿi) present?",
+    sub: "Between 40–119 days, the ruling is more restrictive. Scholarly positions across the four Mazhabs differ.",
+    provisions: true,
+    options: [
+      { text: "Yes — justification is present", next: "40to119_yes" },
+      { text: "No — no justification", next: "40to119_no" },
+    ],
+  },
+
+  // Without uzur 40–119 days → Makruh (by Mazhab Hanafiyyah)
+  "40to119_no": {
+    id: "40to119_no",
+    result: "makruh",
+    title: "TOP is Discouraged (Makruh)",
+    body: "Between 40–119 days without a shariah justification, termination is considered makruh (discouraged) according to Mazhab Hanafiyyah. It is not strictly prohibited but is strongly discouraged without valid justification.",
+    steps: [
+      "Note: ruling based on Mazhab Hanafiyyah — makruh, not prohibited.",
+      "Counsel the patient on the Islamic position and encourage continuation of pregnancy.",
+      "Provide psychosocial support and welfare referral.",
+      "If patient insists, refer for ANC and further counselling.",
+    ],
+  },
+
+  "40to119_yes": {
+    id: "40to119_yes",
+    step: 2,
+    label: "Step 3 · Primary Indication",
+    question: "What is the primary indication?",
+    sub: "Select the category that best describes the clinical or contextual reason for termination.",
+    options: [
+      { text: "Maternal medical indication", next: "maternal_indication" },
+      { text: "Fetal congenital disorder", next: "fetal_congenital" },
+      { text: "Pregnancy resulting from rape", next: "rape" },
+      { text: "Social reason (poverty, adultery, etc.)", next: "social" },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // ≥ 120 DAYS — THREE-WAY ḍarūrah OUTCOME
+  // ══════════════════════════════════════════════════════════════════════════
+  after120: {
+    id: "after120",
+    step: 1,
+    label: "Step 2 · Maternal Risk",
+    question:
+      "Does continuing the pregnancy pose a greater risk to the mother?",
+    sub: "After ensoulment (≥120 days), TOP is generally prohibited. The first question is whether the pregnancy itself poses a serious maternal risk.",
+    options: [
+      {
+        text: "Yes — continuing pregnancy poses greater risk to mother",
+        next: "darurah_check",
+      },
+      {
+        text: "No — no greater risk to mother identified",
+        next: "after120_prohibited",
+      },
+    ],
+  },
+
+  after120_prohibited: {
+    id: "after120_prohibited",
+    result: "prohibited",
+    title: "TOP is Prohibited",
+    body: "After ensoulment (≥120 days), continuing the pregnancy does not pose a greater risk to the mother. Termination is not permitted. Provide full ANC and psychosocial support.",
+    steps: [
+      "Document the clinical decision clearly.",
+      "Provide full ANC referral.",
+      "Arrange psychosocial support for patient and significant others.",
+      "Offer post-consultation counselling.",
+    ],
+  },
+
+  // checklist:true — rendered by DarurahChecklist, not QuestionView
+  darurah_check: {
+    id: "darurah_check",
+    step: 2,
+    label: "Step 3 · ḍarūrah Assessment",
+    checklist: true,
+  },
+
+  // All 5 ticked/Patially ticked → allowed
+  after120_allowed: {
+    id: "after120_allowed",
+    step: 4,
+    label: "Step 5 · MOH Criteria",
+    question: "Does the case meet MOH clinical criteria?",
+    sub: "Even if the ḍarūrah provisions are fulfilled, MOH clinical criteria must still be satisfied for TOP to be permissible after 120 days.",
+    options: [
+      { text: "Yes — MOH criteria are met", next: "after120_allowed_moh_yes" },
+      {
+        text: "No — MOH criteria are not met",
+        next: "moh_no",
+      },
+    ],
+  },
+
+  after120_allowed_moh_yes: {
+    id: "after120_allowed_moh_yes",
+    result: "allowed",
+    title: "TOP is Permissible",
+    body: "Shariah justification is present, ḍarūrah provisions exist, and MOH clinical criteria are satisfied.",
+    steps: [
+      "Document existing ḍarūrah provisions with supporting clinical evidence.",
+      "Obtain a second opinion from a senior obstetrician or maternal-fetal medicine specialist.",
+      "Conduct mandatory pre-abortion counselling session.",
+      "Observe the 48-hour opt-out period — patient may withdraw consent.",
+      "Obtain written informed consent before proceeding.",
+      "Proceed with management of TOP.",
+      "Arrange post-abortion counselling and family planning consultation.",
+      "Provide support to patient, significant others, and healthcare workers.",
+    ],
+  },
+
+  // None ticked → prohibited
+  after120_prohibited: {
+    id: "after120_prohibited",
+    result: "prohibited",
+    title: "TOP is Prohibited",
+    body: "The ḍarūrah provisions have not been fulfilled. Termination is not permitted.",
+    steps: [
+      "Document clearly which provisions were not met and the clinical basis for each finding.",
+      "Inform the patient and family compassionately of the outcome.",
+      "Refer to senior obstetrician or maternal-fetal medicine specialist for ongoing management.",
+      "Provide full antenatal care (ANC) referral.",
+      "Arrange psychosocial support for the patient and significant others.",
+      "Seek Islamic scholarly review (ethics committee or mufti) if the clinical picture changes.",
+      "Reassess if the maternal condition deteriorates or new clinical evidence emerges.",
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SHARED INDICATION BRANCHES
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── Maternal ─────────────────────────────────────────────────────────────
+  maternal_indication: {
+    id: "maternal_indication",
+    step: 3,
+    label: "Step 4 · Maternal Risk",
+    question:
+      "Does continuing the pregnancy pose a greater risk to the mother?",
+    sub: "For maternal indications, there must be clear evidence that the pregnancy itself poses a serious risk — and that termination is an effective intervention to reduce that harm.",
+    options: [
+      {
+        text: "Yes — continuing pregnancy poses greater risk to mother",
+        next: "maternal_moh",
+      },
+      {
+        text: "No — no greater maternal risk identified",
+        next: "maternal_no_risk",
+      },
+    ],
+  },
+
+  maternal_no_risk: {
+    id: "maternal_no_risk",
+    result: "prohibited",
+    title: "TOP is Prohibited",
+    body: "Continuing the pregnancy does not pose a greater risk to the mother. A maternal indication requires clear evidence of serious risk. TOP is not permissible on these grounds.",
+    steps: [
+      "Document the clinical assessment clearly in patient records.",
+      "Refer patient for ANC and specialist review.",
+      "Provide psychosocial support and counselling.",
+    ],
+  },
+
+  maternal_moh: {
+    id: "maternal_moh",
+    step: 4,
+    label: "Step 5 · MOH Criteria",
+    question: "Does the case meet MOH clinical criteria?",
+    sub: "Maternal indications must fulfil Ministry of Health clinical criteria for TOP to be warranted.",
+    options: [
+      { text: "Yes — MOH criteria are met", next: "moh_yes" },
+      { text: "No — MOH criteria are not met", next: "moh_no" },
+    ],
+  },
+
+  // ── Fetal ─────────────────────────────────────────────────────────────────
+  fetal_congenital: {
+    id: "fetal_congenital",
+    step: 3,
+    label: "Step 4 · Fetal Severity",
+    question: "How severe is the fetal congenital condition?",
+    sub: "The severity of the anomaly determines permissibility under Islamic jurisprudence. Three categories apply.",
+    options: [
+      {
+        text: "Mild and treatable, or the child can live with it",
+        next: "congenital_mild",
+      },
+      { text: "Severe and serious condition", next: "congenital_severe" },
+      {
+        text: "Serious — directly causes miscarriage",
+        next: "congenital_direct",
+      },
+    ],
+  },
+
+  // Mild → always prohibited
+  congenital_mild: {
+    id: "congenital_mild",
+    result: "prohibited",
+    title: "TOP is Prohibited",
+    body: "Mild or treatable conditions, or those compatible with life, do not constitute sufficient justification for TOP under Islamic jurisprudence.",
+    steps: [
+      "Counsel patient and family comprehensively on prognosis.",
+      "Arrange specialist paediatric or fetal medicine review.",
+      "Refer for ANC and ongoing psychosocial support.",
+    ],
+  },
+
+  // Severe → check MOH criteria
+  congenital_severe: {
+    id: "congenital_severe",
+    step: 4,
+    label: "Step 5 · MOH Criteria",
+    question: "Does the severe anomaly meet MOH criteria?",
+    sub: "The condition must be confirmed, documented, and assessed against Ministry of Health clinical criteria.",
+    options: [
+      { text: "Yes — MOH criteria are met", next: "moh_yes" },
+      { text: "No — MOH criteria are not met", next: "moh_no" },
+    ],
+  },
+
+  // Directly causes miscarriage → Legal (permissible directly)
+  congenital_direct: {
+    id: "congenital_direct",
+    result: "allowed",
+    title: "TOP is Permissible (Legal)",
+    body: "Where the fetal condition is serious and would directly cause miscarriage, TOP is considered legally permissible according to Mazhab Shafiʿiyyah (3rd view) and Mazhab Hanabilah. MOH counselling protocols must still be followed.",
+    steps: [
+      "Document clinical findings confirming diagnosis and prognosis.",
+      "Conduct mandatory pre-abortion counselling session.",
+      "Observe 48-hour opt-out period.",
+      "Obtain written informed consent.",
+      "Proceed with management of TOP.",
       "Conduct post-abortion counselling and family planning consultation.",
       "Provide support to patient, significant others, and healthcare workers.",
     ],
   },
 
-  fetal_moh_check: {
-    id: "fetal_moh_check",
+  // ── Social reasons ────────────────────────────────────────────────────────
+
+  rape: {
+    id: "rape",
+    step: 4,
     label: "Step 5 · MOH Criteria",
-    question: "Does the case fulfil MOH criteria for termination?",
-    sub: "Even for severe fetal conditions, all five ḍarūrah provisions must be assessed and verified by a qualified medical professional.",
-    provisions: true,
+    question: "Does the case meet MOH criteria for rape-related pregnancy?",
+    sub: "Pregnancy resulting from rape is a recognised ʿuzur sharʿi. MOH criteria must still be verified.",
+    options: [
+      { text: "Yes — MOH criteria are met", next: "moh_yes" },
+      { text: "No — MOH criteria are not met", next: "moh_no" },
+    ],
+  },
+
+  social: {
+    id: "social",
+    step: 3,
+    label: "Step 4 · Scholarly Position",
+    question:
+      "Select the applicable scholarly position or institutional guideline",
+    sub: "For social reasons, Islamic jurists differ. Some permit before 120 days, while others discourage (makruh).",
     options: [
       {
-        text: "Yes — all MOH criteria and ḍarūrah provisions are fulfilled",
-        next: "pre_abortion_counselling",
+        text: "Follow permissive view (Shafi’i 3rd view / Hanbali)",
+        next: "social_moh",
       },
-      { text: "No — MOH criteria are not fulfilled", next: "moh_not_met" },
+      { text: "Follow cautious view (Hanafi - makruh)", next: "social_makruh" },
     ],
   },
 
-  // ── SOCIAL pathway ───────────────────────────────────────────────────────
-  social_reason: {
-    id: "social_reason",
-    label: "Step 4 · Social Circumstances",
-    question: "What are the social circumstances of the pregnancy?",
-    sub: "Islamic jurisprudence distinguishes between pregnancies resulting from unlawful coercion and those from consensual unlawful acts. Poverty and psychosocial reasons alone are not recognised justifications.",
-    options: [
-      { text: "Pregnancy resulting from rape", next: "rape_permissible" },
-      {
-        text: "Pregnancy resulting from adultery (consensual zina)",
-        next: "social_prohibited",
-      },
-      { text: "Poverty or financial hardship", next: "social_prohibited" },
-      {
-        text: "Other psychosocial or social conditions",
-        next: "other_psychosocial",
-      },
-    ],
-  },
-
-  rape_permissible: {
-    id: "rape_permissible",
-    result: "conditional",
-    title: "TOP is Permissible (with conditions)",
-    body: "Pregnancy resulting from rape is recognised as a valid Shariah justification for termination before ensoulment. This is a conditional permissibility — all MOH criteria and mandatory counselling protocols must still be followed.",
+  social_makruh: {
+    id: "social_makruh",
+    result: "makruh",
+    title: "TOP is Discouraged (Makruh)",
+    body: "Termination for social reasons is considered makruh (discouraged) under the Hanafi position. It is not strictly prohibited but should be avoided unless additional justification exists.",
     steps: [
-      "Document the circumstances with appropriate sensitivity and confidentiality.",
-      "Conduct mandatory pre-abortion counselling session.",
-      "Observe 48-hour opt-out period — patient may withdraw consent.",
-      "Proceed with management of TOP if patient confirms decision.",
-      "Conduct post-abortion counselling and family planning consultation.",
-      "Provide comprehensive psychosocial support to the patient.",
+      "Provide counselling on ethical considerations.",
+      "Encourage continuation of pregnancy where possible.",
+      "Offer psychosocial and welfare support.",
     ],
   },
-
-  social_prohibited: {
-    id: "social_prohibited",
-    result: "prohibited",
-    title: "TOP is Prohibited",
-    body: "Pregnancy resulting from consensual adultery (zina), poverty, or financial hardship does not constitute a valid Shariah justification for termination. These circumstances do not fulfil the ḍarūrah conditions required under Islamic law.",
-    steps: [
-      "Provide non-judgmental counselling and emotional support.",
-      "Continue antenatal care and refer to social services as appropriate.",
-      "Discuss available support networks and welfare assistance.",
-    ],
-  },
-
-  other_psychosocial: {
-    id: "other_psychosocial",
+  social_moh: {
+    id: "social_moh",
+    step: 4,
     label: "Step 5 · MOH Criteria",
-    question: "Does the case fulfil MOH criteria for termination?",
-    sub: "Other psychosocial conditions require careful evaluation against MOH criteria. The treating physician must determine whether the situation constitutes a recognised clinical indication.",
-    provisions: true,
+    question: "Does the case meet MOH clinical or legal criteria?",
+    sub: "Even if a permissive scholarly view is adopted, MOH criteria must still be satisfied.",
     options: [
-      {
-        text: "Yes — all MOH criteria and ḍarūrah provisions are fulfilled",
-        next: "pre_abortion_counselling",
-      },
-      { text: "No — MOH criteria are not fulfilled", next: "moh_not_met" },
+      { text: "Yes — MOH criteria are met", next: "moh_yes" },
+      { text: "No — MOH criteria are not met", next: "moh_no" },
     ],
   },
 
-  // ── Shared outcomes ───────────────────────────────────────────────────────
-  moh_not_met: {
-    id: "moh_not_met",
-    result: "prohibited",
-    title: "TOP is Prohibited",
-    body: "The MOH criteria for termination of pregnancy have not been fulfilled. TOP is not indicated at this time. The patient should continue with antenatal care.",
+  // ══════════════════════════════════════════════════════════════════════════
+  // SHARED MOH OUTCOMES
+  // ══════════════════════════════════════════════════════════════════════════
+  moh_yes: {
+    id: "moh_yes",
+    result: "allowed",
+    title: "TOP is Permissible",
+    body: "Shariah justification is present and MOH clinical criteria are satisfied. Proceed with pre-abortion counselling, the mandatory 48-hour opt-out window, and written informed consent.",
     steps: [
-      "Inform the patient clearly and compassionately of the assessment outcome.",
-      "Continue antenatal care (ANC) and refer to relevant specialists.",
+      "Complete mandatory pre-abortion counselling session.",
+      "Observe the 48-hour opt-out period.",
+      "Obtain written informed consent.",
+      "Proceed with management of TOP.",
+      "Arrange post-abortion counselling.",
+      "Provide family planning consultation.",
+      "Provide support to patient, significant others, and healthcare workers.",
+    ],
+  },
+
+  moh_no: {
+    id: "moh_no",
+    result: "prohibited",
+    title: "TOP is Not Clinically Indicated",
+    body: "Although a shariah justification may be present, the case does not meet MOH clinical criteria. TOP is not recommended at this time. Refer patient for ANC.",
+    steps: [
+      "Document the clinical decision clearly in patient records.",
+      "Refer patient for antenatal care (ANC).",
       "Provide psychosocial support and counselling.",
-      "Reassess if clinical condition changes.",
-    ],
-  },
-
-  pre_abortion_counselling: {
-    id: "pre_abortion_counselling",
-    result: "conditional",
-    title: "Proceed to Pre-Abortion Counselling",
-    body: "The case fulfils the required Islamic and MOH criteria. Proceed with mandatory pre-abortion counselling. The patient must be given full information and a 48-hour opt-out period before any procedure is carried out.",
-    steps: [
-      "Conduct mandatory pre-abortion counselling session with the patient.",
-      "Provide reasons for termination from an Islamic view and available support.",
-      "Observe 48-hour opt-out period — patient may change their decision.",
-      "If patient opts out → continue with ANC.",
-      "If patient agrees to proceed → management of TOP.",
-      "Conduct post-abortion counselling and family planning consultation.",
-      "Provide support to the patient, significant others, and healthcare workers.",
+      "Arrange post-consultation support for patient and significant others.",
     ],
   },
 };

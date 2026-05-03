@@ -1,16 +1,21 @@
 // hooks/useDecision.js
 import { useState } from "react";
-import { DECISION_TREE } from "../data/decisionData";
+import { TREE } from "../data/decisionData";
 
 export function useDecision() {
-  const [history, setHistory] = useState([]); // [{ nodeId, chosen }]
+  const [history, setHistory] = useState([]);
   const [currentId, setCurrentId] = useState("start");
 
-  const current = DECISION_TREE[currentId];
+  const current = TREE[currentId];
   const isResult = !!current?.result;
+  const isChecklist = !!current?.checklist;
 
+  // optionIndex: number for normal nodes, or {text, next} object for checklist
   function choose(optionIndex) {
-    const option = current.options[optionIndex];
+    const option =
+      typeof optionIndex === "object"
+        ? optionIndex
+        : current.options[optionIndex];
     setHistory((prev) => [...prev, { nodeId: currentId, chosen: option.text }]);
     setCurrentId(option.next);
   }
@@ -27,5 +32,5 @@ export function useDecision() {
     setCurrentId("start");
   }
 
-  return { current, history, choose, back, reset, isResult };
+  return { current, history, choose, back, reset, isResult, isChecklist };
 }

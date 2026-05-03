@@ -7,16 +7,17 @@ const RESOURCES = [
   },
   {
     icon: "book",
-    title: "Book: Fatwa-fatwa Perubatan di Malaysia",
+    title: "Fatwa-fatwa Perubatan di Malaysia",
     desc: "Islamic legal opinions concerning medicine and its application in Malaysia; collected fatwas issued by the Fatwa Committee of the National Council for Islamic Religious Affairs Malaysia and State Mufti Departments of Malaysia.\nSource: Muhamad Rafiqi Hehsan. (2023). Fatwa-fatwa Perubatan di Malaysia (p. 436) [Review of Fatwa-fatwa Perubatan di Malaysia ]. PENERBIT USIM.",
     href: "#",
   },
-  // {
-  //   icon: "shield",
-  //   title: "Pre- & Post-TOP Counselling Framework",
-  //   desc: "MOH-approved counselling protocol including the mandatory 48-hour opt-out window and psychosocial support pathway.",
-  //   href: "#",
-  // },
+  {
+    icon: "shield",
+    title:
+      "Integrating Aqli (Rationale) and Naqli (Revealed) Knowledge in AI-driven Clinical Decision Support Systems to Enhance Healthcare Delivery for Guiding Termination of Pregnancy Among Muslim Patients: A Systematic ",
+    desc: "This systematic review explores how artificial intelligence (AI)-driven clinical decision support systems (CDSS) can improve decision-making in termination of pregnancy (TOP), particularly for Muslim patients. It highlights the integration of medical evidence (aqli) and Islamic principles (naqli) to create more holistic, culturally sensitive healthcare solutions.",
+    href: "https://pubmed.ncbi.nlm.nih.gov/41742117/",
+  },
   // {
   //   icon: "users",
   //   title: "Multidisciplinary TOP Team Guidelines",

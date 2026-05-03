@@ -45,12 +45,23 @@ const TEAM = [
   },
 ];
 
+function BrandName() {
+  const word = 'HAYATPATH'
+  return (
+    <strong>
+      {word.split('').map((l, i) => (
+        <span key={i} style={{ color: 'var(--burgundy)' }}>{l}</span>
+      ))}
+    </strong>
+  )
+}
+
 export default function AboutPage() {
   return (
     <div className="page-content animate-in">
       <div className="page-header">
         <h1 className="page-title">
-          About <em>TOP.Guide</em>
+          About <em>HAYATPATH</em>
         </h1>
         <p className="page-desc">
           A clinical decision aid built for Malaysian healthcare professionals —
@@ -63,23 +74,12 @@ export default function AboutPage() {
         {/* Mission */}
         <div className="mission-card">
           <h3>Our mission</h3>
-          {/* <p>
-            TOP.Guide was developed to give clinicians a clear, traceable, and ethically grounded
-            framework for navigating termination of pregnancy decisions involving Muslim patients.
-          </p>
-          <p style={{ marginTop: 14 }}>
-            The tool integrates rulings from all four major Sunni schools of Islamic jurisprudence —
-            Hanafiyyah, Malikiyyah, Shafiʿiyyah, and Hanabilah — and cross-references each pathway
-            with current Ministry of Health Malaysia clinical criteria.
-          </p>
-          <p style={{ marginTop: 14 }}>
-            The guiding principle: <em style={{ color: '#b0c4d8', fontStyle: 'italic' }}>
-            "Necessity renders forbidden things permissible" (al-ḍarūrāt tubīḥ al-maḥẓūrāt).</em>
-          </p> */}
-          <p style={{ marginTop: 14 }}>
-            HAYATPATH was developed as a digital platform that supports
-            termination of pregnancy (TOP) decision-making for Muslim patients.
-          </p>
+<p style={{ marginTop: 14 }}>
+  {['H','A','Y','A','T','P','A','T','H'].map((letter, i) => (
+    <span key={i} style={{ color: 'var(--burgundy)', fontWeight: 700 }}>{letter}</span>
+  ))} was developed as a digital platform that supports
+  termination of pregnancy (TOP) decision-making for Muslim patients.
+</p>
           <p style={{ marginTop: 14 }}>
             By integrating evidence-based medical practice with Islamic ethical
             principles, ensuring that both clinical and religious considerations
