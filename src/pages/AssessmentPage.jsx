@@ -1,6 +1,10 @@
 // pages/AssessmentPage.jsx
 import { useState } from "react";
-import { TREE, DARURAH_PROVISIONS, SCHOOLS_OF_FIQH } from "../data/decisionData";
+import {
+  TREE,
+  DARURAH_PROVISIONS,
+  SCHOOLS_OF_FIQH,
+} from "../data/decisionData";
 import { useDecision } from "../hooks/useDecision";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -88,7 +92,9 @@ export default function AssessmentPage() {
               </svg>
             </div>
             <div>
-              <div className="wizard-title">Termination of Pregnancy (TOP) Decision Protocol</div>
+              <div className="wizard-title">
+                Termination of Pregnancy (TOP) Decision Protocol
+              </div>
               <div className="wizard-sub">
                 Islamic jurisprudence · MOH criteria
               </div>
@@ -183,8 +189,10 @@ export default function AssessmentPage() {
           </div>
 
           {/* Reference rail */}
-          <div className="ref-rail"> <h1>Protocols</h1>
-            <div className="ref-tabs" >
+          <div className="ref-rail">
+            {" "}
+            <h1>Protocols</h1>
+            <div className="ref-tabs">
               {[
                 { key: "gestational", label: "Age" },
                 { key: "moh", label: "Clinical" },
@@ -199,7 +207,6 @@ export default function AssessmentPage() {
                 </button>
               ))}
             </div>
-
             {activeTab === "gestational" && (
               <div className="ref-section">
                 {[
@@ -230,7 +237,6 @@ export default function AssessmentPage() {
                 ))}
               </div>
             )}
-
             {activeTab === "moh" && (
               <div className="ref-section">
                 {[
@@ -265,7 +271,6 @@ export default function AssessmentPage() {
                 ))}
               </div>
             )}
-
             {activeTab === "fiqh" && (
               <div className="ref-section">
                 {SCHOOLS_OF_FIQH.map((s) => (
@@ -332,7 +337,7 @@ function QuestionView({ node, onChoose, darurahOpen, setDarurahOpen }) {
           {darurahOpen && (
             <div className="darurah-panel animate-in">
               <div className="darurah-panel-title">
-                All five provisions must be fulfilled
+                At least one provision must be fulfilled
               </div>
               {DARURAH_PROVISIONS.map((p, i) => (
                 <div className="darurah-item" key={i}>
