@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   TREE,
   DARURAH_PROVISIONS,
+  DARURAH_PROVISIONS2,
   SCHOOLS_OF_FIQH,
 } from "../data/decisionData";
 import { useDecision } from "../hooks/useDecision";
@@ -27,7 +28,7 @@ const RESULT_CONFIG = {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AssessmentPage() {
-  const { current, history, choose, back, reset, isResult, isChecklist } =
+  const { current, history, choose, back, reset, isResult, isChecklist, isShariahChecklist } =
     useDecision();
   const [activeTab, setActiveTab] = useState("gestational");
   const [darurahOpen, setDarurahOpen] = useState(false);
@@ -152,14 +153,24 @@ export default function AssessmentPage() {
 
             {isResult ? (
               <ResultView node={current} onBack={back} onReset={reset} />
-            ) : isChecklist ? (
+             ) : isChecklist ? (
               <DarurahChecklist
                 onConfirm={(allMet) => {
                   choose({
-                    text: allMet
-                      ? "All 5 provisions confirmed"
-                      : "Not all provisions met",
+                    text: allMet ? "All 5 provisions confirmed" : "Not all provisions met",
                     next: allMet ? "after120_allowed" : "after120_prohibited",
+                  });
+                }}
+                onBack={back}
+                onReset={reset}
+              />
+            ) : isShariahChecklist ? (
+              <ShariahChecklist
+                node={current}
+                onConfirm={(hasJustification) => {
+                  choose({
+                    text: hasJustification ? "Yes — justification is present" : "No — no justification",
+                    next: hasJustification ? current.next_yes : current.next_no,
                   });
                 }}
                 onBack={back}
@@ -174,7 +185,7 @@ export default function AssessmentPage() {
               />
             )}
 
-            {!isResult && !isChecklist && (
+            {!isResult && !isChecklist && !isShariahChecklist && (
               <div className="q-footer">
                 {history.length > 0 && (
                   <button className="btn-ghost" onClick={back}>
@@ -366,6 +377,93 @@ function QuestionView({ node, onChoose, darurahOpen, setDarurahOpen }) {
 }
 
 // ─── Darurah Checklist ────────────────────────────────────────────────────────
+function ShariahChecklist({ node, onConfirm, onBack, onReset }) {
+  const [checked, setChecked] = useState(Array(DARURAH_PROVISIONS2.length).fill(false))
+  const [noneSelected, setNoneSelected] = useState(false)
+
+  const checkedCount = checked.filter(Boolean).length
+  const anyChecked   = checkedCount > 0
+  const canConfirm   = anyChecked || noneSelected
+  const projectedYes = anyChecked && !noneSelected
+
+  function toggleItem(i) {
+    setNoneSelected(false)
+    setChecked(prev => prev.map((v, idx) => idx === i ? !v : v))
+  }
+
+  function toggleNone() {
+    setChecked(Array(DARURAH_PROVISIONS2.length).fill(false))
+    setNoneSelected(o => !o)
+  }
+
+  return (
+    <>
+      <div className="q-tag"><span>{node.label}</span></div>
+      <h2 className="q-title">Assess the ḍarūrah provisions</h2>
+      <p className="q-sub">
+        Tick each provision that applies to this case. If <strong>any</strong> provision
+        is present, the assessment proceeds to the indication step. If none apply, the
+        no-justification ruling is applied.
+      </p>
+
+      <div className="darurah-checklist">
+        {DARURAH_PROVISIONS2.map((j, i) => (
+          <label
+            key={i}
+            className={`darurah-check-item${checked[i] ? " checked" : ""}`}
+            onClick={() => toggleItem(i)}
+          >
+            <div className={`darurah-checkbox${checked[i] ? " checked" : ""}`}>
+              {checked[i] && <span>✓</span>}
+            </div>
+            <div className="darurah-check-text">
+              <div className="darurah-check-title">{j.title}</div>
+              <div className="darurah-check-detail">{j.detail}</div>
+            </div>
+          </label>
+        ))}
+
+        <label
+          className={`darurah-check-item darurah-check-none${noneSelected ? " none-selected" : ""}`}
+          onClick={toggleNone}
+        >
+          <div className={`darurah-checkbox darurah-checkbox-none${noneSelected ? " checked-none" : ""}`}>
+            {noneSelected && <span>✗</span>}
+          </div>
+          <div className="darurah-check-text">
+            <div className="darurah-check-title">No justification present</div>
+            <div className="darurah-check-detail">
+              None of the above grounds apply — the no-justification ruling will be applied.
+            </div>
+          </div>
+        </label>
+      </div>
+
+      {/* {canConfirm && (
+        <div className={`darurah-outcome-indicator${projectedYes ? " outcome-allowed" : " outcome-prohibited"}`}>
+          {projectedYes
+            ? <><strong>{checkedCount} justification{checkedCount > 1 ? "s" : ""} confirmed</strong> — proceed to indication assessment.</>
+            : <><strong>No justification confirmed</strong> — no-justification ruling will apply.</>
+          }
+        </div>
+      )} */}
+
+      <div className="darurah-checklist-footer">
+        <button
+          className={`btn-confirm${projectedYes ? " btn-confirm-allowed" : " btn-confirm-prohibited"}`}
+          onClick={() => onConfirm(projectedYes)}
+          disabled={!canConfirm}
+        >
+          {!canConfirm ? "Select at least one option to continue" : "Confirm"}
+        </button>
+        <div className="darurah-checklist-actions">
+          <button className="btn-ghost" onClick={onBack}>← Back</button>
+          <button className="btn-ghost" onClick={onReset}>Reset</button>
+        </div>
+      </div>
+    </>
+  )
+}
 
 function DarurahChecklist({ onConfirm, onBack, onReset }) {
   const [checked, setChecked] = useState(

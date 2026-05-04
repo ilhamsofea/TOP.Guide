@@ -2,6 +2,33 @@
 // Logic follows: "Decision of Termination of Pregnancy for Muslim Patients" flowchart
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
+export const DARURAH_PROVISIONS2 = [
+  {
+    title: "Certainty of emergency",
+    detail:
+      "The ḍarūrah must be real and established — not speculative or presumed.",
+  },
+  {
+    title: "Direct causal link",
+    detail:
+      "The harm must result directly from the current pregnancy, with no other means to avert it except TOP.",
+  },
+  {
+    title: "Defined necessity",
+    detail:
+      "The necessity must not contradict Islamic legal commands and prohibitions.",
+  },
+  {
+    title: "Evidence-based medical certainty",
+    detail:
+      "There must be clear, evidence-based medical certainty that continuing the pregnancy poses a serious risk, and that termination is an effective intervention to prevent or reduce that harm.",
+  },
+  {
+    title: "Determined by a qualified professional",
+    detail:
+      "The state of ḍarūrah must be determined by a qualified, competent medical professional — not decided by the patient alone.",
+  },
+];
 
 export const DARURAH_PROVISIONS = [
   {
@@ -72,18 +99,27 @@ export const TREE = {
   // ══════════════════════════════════════════════════════════════════════════
   // BEFORE 40 DAYS
   // ══════════════════════════════════════════════════════════════════════════
+  // before40: {
+  //   id: "before40",
+  //   step: 1,
+  //   label: "Step 2 · Shariah Justification",
+  //   question: "Is a shariah justification (ʿuzur sharʿi) present?",
+  //   sub: "A recognised religious or medical ground must exist for the ruling to be reconsidered before 40 days.",
+  //   provisions: true,
+  //   options: [
+  //     { text: "Yes — justification is present", next: "before40_yes" },
+  //     { text: "No — no justification", next: "before40_no" },
+  //   ],
+  // },
+
   before40: {
-    id: "before40",
-    step: 1,
-    label: "Step 2 · Shariah Justification",
-    question: "Is a shariah justification (ʿuzur sharʿi) present?",
-    sub: "A recognised religious or medical ground must exist for the ruling to be reconsidered before 40 days.",
-    provisions: true,
-    options: [
-      { text: "Yes — justification is present", next: "before40_yes" },
-      { text: "No — no justification", next: "before40_no" },
-    ],
-  },
+  id: "before40",
+  step: 1,
+  label: "Step 2 · Shariah Justification",
+  shariah_checklist: true,
+  next_yes: "before40_yes",
+  next_no: "before40_no",
+},
 
   before40_yes: {
     id: "before40_yes",
@@ -176,18 +212,26 @@ export const TREE = {
   // ══════════════════════════════════════════════════════════════════════════
   // 40 – 119 DAYS
   // ══════════════════════════════════════════════════════════════════════════
+  // "40to119": {
+  //   id: "40to119",
+  //   step: 1,
+  //   label: "Step 2 · Shariah Justification",
+  //   question: "Is a shariah justification (ʿuzur sharʿi) present?",
+  //   sub: "Between 40–119 days, the ruling is more restrictive. Scholarly positions across the four Mazhabs differ.",
+  //   provisions: true,
+  //   options: [
+  //     { text: "Yes — justification is present", next: "40to119_yes" },
+  //     { text: "No — no justification", next: "40to119_no" },
+  //   ],
+  // },
   "40to119": {
-    id: "40to119",
-    step: 1,
-    label: "Step 2 · Shariah Justification",
-    question: "Is a shariah justification (ʿuzur sharʿi) present?",
-    sub: "Between 40–119 days, the ruling is more restrictive. Scholarly positions across the four Mazhabs differ.",
-    provisions: true,
-    options: [
-      { text: "Yes — justification is present", next: "40to119_yes" },
-      { text: "No — no justification", next: "40to119_no" },
-    ],
-  },
+  id: "40to119",
+  step: 1,
+  label: "Step 2 · Shariah Justification",
+  shariah_checklist: true,
+  next_yes: "40to119_yes",
+  next_no: "40to119_no",
+},
 
   // Without uzur 40–119 days → Makruh (by Mazhab Hanafiyyah)
   "40to119_no": {

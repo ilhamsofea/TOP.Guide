@@ -9,6 +9,7 @@ export function useDecision() {
   const current = TREE[currentId];
   const isResult = !!current?.result;
   const isChecklist = !!current?.checklist;
+  const isShariahChecklist = !!current?.shariah_checklist;
 
   // optionIndex: number for normal nodes, or {text, next} object for checklist
   function choose(optionIndex) {
@@ -32,5 +33,5 @@ export function useDecision() {
     setCurrentId("start");
   }
 
-  return { current, history, choose, back, reset, isResult, isChecklist };
+  return { current, history, choose, back, reset, isResult, isChecklist, isShariahChecklist};
 }
